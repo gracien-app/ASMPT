@@ -15,19 +15,19 @@ namespace AplClient
         public Form1()
         {
             InitializeComponent();
-
             client = new Client
+
             {
-                bitmap = new Bitmap(100,200)
+                bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height)
             };
 
             pictureBox1.ClientSize = new Size(client.bitmap.Width, client.bitmap.Height);
-            pictureBox1.Image = (Image) client.bitmap;
+            pictureBox1.Image = (Image)client.bitmap;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -37,5 +37,10 @@ namespace AplClient
         }
 
         private Client client;
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            client.NumberOfSamples = (int) numericUpDown1.Value;
+        }
     }
 }

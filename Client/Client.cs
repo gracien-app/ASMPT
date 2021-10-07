@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Renderer;
+
 namespace AplClient
 {
      class Client
@@ -13,16 +15,13 @@ namespace AplClient
 
         public int NumberOfSamples { get; set; }
 
+        private Renderer.Renderer renderer;
+
         public void StartRendering() 
         {
-            for(var x = 0; x < bitmap.Width; x++)
-            {
-                for(var y = 0; y < bitmap.Height; y++)
-                {
-                    bitmap.SetPixel(x,y,Color.Indigo);
-                }
-            }
+            renderer = new Renderer.Renderer(bitmap.Width, bitmap.Height);
 
+            renderer.renderImage(NumberOfSamples, bitmap);
         }
     }
 }
