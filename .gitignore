@@ -635,5 +635,3 @@ $RECYCLE.BIN/
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,visualstudio,visualstudiocode,csharp,dotnetcore
-
-*.csproj
