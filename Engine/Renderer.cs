@@ -15,15 +15,15 @@ namespace Renderer
             for (int y = 0; y < imageHeight; y++) {
                 for (int x = 0; x < imageWidth; x++) {
 
-                    float pixelW = x / (imageWidth-1);
-                    float pixelH = y / (imageHeight-1);
+                    float pixelW = x / (float)(imageWidth-1);
+                    float pixelH = y / (float)(imageHeight-1);
 
                     var pixelRay = camera.makeRay(pixelW, pixelH);
 
-                    int R = (int)(255 * pixelW);
-                    int G = (int)(255 * pixelH);
-                    int B = (int)(0.5f * 255);
-                    
+                    int R = (int)(255.0f * pixelW);
+                    int G = (int)(255.0f * pixelH);
+                    int B = (int)(0.5f * 255.0f);
+
                     Color outColor = Color.FromArgb(R, G, B);
 
                     bmp.SetPixel(x, y, outColor);
