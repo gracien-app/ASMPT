@@ -20,6 +20,7 @@ namespace AplClient
             {
                 bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height)
             };
+            asmProxy = new AsmProxy();
 
             pictureBox1.ClientSize = new Size(client.bitmap.Width, client.bitmap.Height);
             pictureBox1.Image = (Image)client.bitmap;
@@ -34,9 +35,12 @@ namespace AplClient
         {
             client.StartRendering();
             pictureBox1.Refresh();
+
+            textBox1.Text =  asmProxy.executeAsmAddTwoDoubles(2,3).ToString();
         }
 
         private Client client;
+        private AsmProxy asmProxy;
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
