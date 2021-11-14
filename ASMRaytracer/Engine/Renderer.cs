@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Numerics;
 
 namespace Renderer
 {
@@ -11,6 +12,14 @@ namespace Renderer
         }
 
         public void renderImage(int sampleCount, Bitmap bmp) {
+
+            objects = new Sphere[] {
+                new Sphere(new Vector3(0.0f, 0.0f, -1.0f), 0.3f, Color.FromArgb(255, 0, 255, 0)),
+                new Sphere(new Vector3(0.0f, 0.0f, -0.6f), 0.05f, Color.FromArgb(255, 0, 0, 255))
+            };
+
+            float timeMin = 0.0001f;
+            float timeMax = 100000.0f;
             
             for (int y = 0; y < imageHeight; y++) {
                 for (int x = 0; x < imageWidth; x++) {
@@ -26,6 +35,12 @@ namespace Renderer
 
                     Color outColor = Color.FromArgb(R, G, B);
 
+                    foreach (Sphere sph in objects) {
+                        if (sph.Intersect(pixelRay, timeMin, timeMax)) {
+                            outColor = sph.colour;
+                        }  
+                    }
+
                     bmp.SetPixel(x, y, outColor);
 
                 }
@@ -36,6 +51,7 @@ namespace Renderer
         private Camera camera;
         private int imageWidth;
         private int imageHeight;
+        private Sphere[] objects;
     }
 
 }
