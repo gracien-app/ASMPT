@@ -14,8 +14,8 @@ namespace Renderer
         public void renderImage(int sampleCount, Bitmap bmp) {
 
             objects = new Sphere[] {
-                new Sphere(new Vector3(0.0f, 0.0f, -1.0f), 0.3f, Color.FromArgb(255, 0, 255, 0)),
-                new Sphere(new Vector3(0.0f, 0.0f, -0.6f), 0.05f, Color.FromArgb(255, 0, 0, 255))
+                new Sphere(new Vector3(0.0f, 0.0f, -0.6f), 0.05f, Color.FromArgb(255, 0, 0, 255)),
+                new Sphere(new Vector3(0.0f, 0.0f, -1.0f), 0.3f, Color.FromArgb(255, 0, 255, 0)), 
             };
 
             float timeMin = 0.0001f;

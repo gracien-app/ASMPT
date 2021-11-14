@@ -16,13 +16,12 @@ namespace AplClient
         {
             InitializeComponent();
             client = new Client
-
             {
-                bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height)
+                bitmap = new Bitmap(700, 700)
             };
             asmProxy = new AsmProxy();
 
-            pictureBox1.ClientSize = new Size(client.bitmap.Width, client.bitmap.Height);
+            pictureBox1.ClientSize = new Size(700, 700);
             pictureBox1.Image = (Image)client.bitmap;
         }
 
