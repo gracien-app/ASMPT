@@ -35,8 +35,10 @@ namespace Renderer
 
                     Color outColor = Color.FromArgb(R, G, B);
 
+                    float closestTime = timeMax;
+
                     foreach (Sphere sph in objects) {
-                        if (sph.Intersect(pixelRay, timeMin, timeMax)) {
+                        if (sph.Intersect(pixelRay, timeMin, ref closestTime)) {
                             outColor = sph.colour;
                         }  
                     }

@@ -10,7 +10,7 @@ namespace Renderer {
             this.colour = colour;
         }
 
-        public bool Intersect(Ray inRay,float timeMin, float timeMax) {
+        public bool Intersect(Ray inRay,float timeMin, ref float timeMax) {
             
             Vector3 originC = inRay.origin - this.center;
             float a = inRay.direct.LengthSquared();
@@ -18,13 +18,14 @@ namespace Renderer {
             float c = (originC).LengthSquared()-(this.radius*this.radius);
             
             float delta = b*b - a*c;
+
+            float root = 0.0f;
             
             if (delta < 0.0) return false;
-            
             else {
                 float deltaSqrt = MathF.Sqrt(delta);
                 
-                float root = (-b - deltaSqrt) / a;
+                root = (-b - deltaSqrt) / a;
                 if (root > timeMax || root < timeMin) {
                     root = (-b + deltaSqrt) / a;
                     if (root > timeMax || root < timeMin) {
@@ -33,6 +34,7 @@ namespace Renderer {
                 }
             }
 
+            timeMax = root;
             return true;
         }
 
