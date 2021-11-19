@@ -42,21 +42,26 @@ namespace Renderer
 
             float timeMin = 0.001f;
             float timeMax = 100000.0f;
-            int sampleLimit = 10;
+            int sampleLimit = 20;
 
             Vector3 skyColour = new Vector3(221.0f/255.0f, 251.0f/255.0f, 1.0f);
+
+            Random RNG = new Random();
             
             for (int y = 0; y < imageHeight; y++) {
                 for (int x = 0; x < imageWidth; x++) {
 
                     Vector3 totalColour = new Vector3(0.0f);
 
-                    float pixelW = x / (float)(imageWidth-1);
-                    float pixelH = y / (float)(imageHeight-1);
-
                     for (int i = 0; i < sampleLimit; i++) {
 
-                        int bounceLimit = 10;
+                        float offsetX = (float)((RNG.NextDouble()-0.5f)*2.0f);
+                        float offsetY = (float)((RNG.NextDouble()-0.5f)*2.0f);
+
+                        float pixelW = (x + offsetX) / (float)(imageWidth-1);
+                        float pixelH = (y + offsetY) / (float)(imageHeight-1);
+                        
+                        int bounceLimit = 50;
                         
                         var pixelRay = camera.makeRay(pixelW, pixelH);
                         var tempColour = new Vector3(1.0f);
