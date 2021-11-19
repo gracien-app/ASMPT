@@ -1,8 +1,10 @@
+using System;
 using System.Drawing;
 using System.Numerics;
 
 namespace Renderer
 {
+
     class Renderer {
 
         public Renderer(int width, int height) {
@@ -11,43 +13,100 @@ namespace Renderer
             camera = new Camera(width, height);
         }
 
+        public Ray bounceRay(float time, float radius, Ray inRay, Vector3 center, float timeMin) {
+            
+            Vector3 hitPos = inRay.at(time);
+            Vector3 hitNormal = (hitPos - center) / radius;
+
+            Random RNG = new Random();
+
+            float x = (float)((RNG.NextDouble()-0.5f)*2.0f);
+            float y = (float)((RNG.NextDouble()-0.5f)*2.0f);
+            float z = (float)((RNG.NextDouble()-0.5f)*2.0f);
+
+            Vector3 randomDir = new Vector3(x, y, z);
+
+            randomDir = Vector3.Normalize(randomDir);
+
+            randomDir = Vector3.Dot(randomDir, hitNormal) > 0.0f ? randomDir : -randomDir;
+
+            return new Ray((hitPos + hitNormal * timeMin), randomDir);
+        }
+
         public void renderImage(int sampleCount, Bitmap bmp) {
 
             objects = new Sphere[] {
-                new Sphere(new Vector3(0.0f, 0.0f, -0.6f), 0.05f, Color.FromArgb(255, 0, 0, 255)),
-                new Sphere(new Vector3(0.0f, 0.0f, -1.0f), 0.3f, Color.FromArgb(255, 0, 255, 0)), 
+                new Sphere(new Vector3(0.0f, 0.3f-0.2f, -1.0f), 0.3f, new Vector3(0.41f, 0.41f, 0.41f)), 
+                new Sphere(new Vector3(0.0f, -1000.0f-0.2f, -1.0f), 1000.0f, new Vector3(0.41f, 0.41f, 0.41f)), 
             };
 
-            float timeMin = 0.0001f;
+            float timeMin = 0.001f;
             float timeMax = 100000.0f;
+            int sampleLimit = 20;
+
+            Vector3 skyColour = new Vector3(221.0f/255.0f, 251.0f/255.0f, 1.0f);
+
+            Random RNG = new Random();
             
             for (int y = 0; y < imageHeight; y++) {
                 for (int x = 0; x < imageWidth; x++) {
 
-                    float pixelW = x / (float)(imageWidth-1);
-                    float pixelH = y / (float)(imageHeight-1);
+                    Vector3 totalColour = new Vector3(0.0f);
 
-                    var pixelRay = camera.makeRay(pixelW, pixelH);
+                    for (int i = 0; i < sampleLimit; i++) {
 
-                    int R = (int)(255.0f * pixelW);
-                    int G = (int)(255.0f * pixelH);
-                    int B = (int)(0.5f * 255.0f);
+                        float offsetX = (float)((RNG.NextDouble()-0.5f)*2.0f);
+                        float offsetY = (float)((RNG.NextDouble()-0.5f)*2.0f);
 
-                    Color outColor = Color.FromArgb(R, G, B);
+                        float pixelW = (x + offsetX) / (float)(imageWidth-1);
+                        float pixelH = (y + offsetY) / (float)(imageHeight-1);
+                        
+                        int bounceLimit = 50;
+                        
+                        var pixelRay = camera.makeRay(pixelW, pixelH);
+                        var tempColour = new Vector3(1.0f);
 
-                    float closestTime = timeMax;
+                        // while (bounceLimit > 0) {
 
-                    foreach (Sphere sph in objects) {
-                        if (sph.Intersect(pixelRay, timeMin, ref closestTime)) {
-                            outColor = sph.colour;
-                        }  
+                            while(true) {
+
+                                if(bounceLimit == 0) {
+                                    tempColour = new Vector3(0.0f);
+                                    break;
+                                }
+
+                                Sphere closestSphere = new Sphere();
+                                float closestTime = timeMax;
+
+                                foreach (Sphere sph in objects) {
+                                    if (sph.Intersect(pixelRay, timeMin, ref closestTime)) {
+                                        closestSphere = sph;
+                                    }  
+                                }
+
+                                if (closestSphere.radius != 0.0f) {
+                                    tempColour *= closestSphere.colour;
+                                    bounceLimit--;
+                                } else {
+                                    tempColour *= skyColour;
+                                    break;
+                                }
+
+                                pixelRay = bounceRay(closestTime, closestSphere.radius, pixelRay, closestSphere.center, timeMin);
+                            }
+
+                        totalColour += tempColour;
                     }
 
+                    totalColour /= sampleLimit;
+
+                    Color outColor = Color.FromArgb((int)(totalColour.X * 255.0f),
+                                                    (int)(totalColour.Y * 255.0f),
+                                                    (int)(totalColour.Z * 255.0f));
                     bmp.SetPixel(x, y, outColor);
 
                 }
             }
-
          }
 
         private Camera camera;

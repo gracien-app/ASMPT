@@ -4,7 +4,14 @@ using System.Drawing;
 
 namespace Renderer {
     class Sphere {
-        public Sphere(Vector3 center, float radius, Color colour) {
+
+        public Sphere() {
+            this.center = new Vector3(0.0f);
+            this.radius = 0.0f;
+            this.colour = new Vector3(0.0f);
+        }
+
+        public Sphere(Vector3 center, float radius, Vector3 colour) {
             this.center = center;
             this.radius = radius;
             this.colour = colour;
@@ -38,8 +45,8 @@ namespace Renderer {
             return true;
         }
 
-        Vector3 center;
-        public Color colour;
-        float radius;
+        public Vector3 center;
+        public Vector3 colour;
+        public float radius;
     }
 }
