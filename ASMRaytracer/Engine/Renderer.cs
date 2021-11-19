@@ -36,8 +36,8 @@ namespace Renderer
         public void renderImage(int sampleCount, Bitmap bmp) {
 
             objects = new Sphere[] {
-                // new Sphere(new Vector3(0.0f, 0.0f, -0.6f), 0.05f, new Vector3(1.0f, 0.0f, 0.0f)),
-                new Sphere(new Vector3(0.0f, 0.5f, -1.0f), 0.3f, new Vector3(0.0f, 1.0f, 0.0f)), 
+                new Sphere(new Vector3(0.0f, 0.3f, -1.0f), 0.3f, new Vector3(0.41f, 0.41f, 0.41f)), 
+                new Sphere(new Vector3(0.0f, -1000.0f, -1.0f), 1000.0f, new Vector3(0.41f, 0.41f, 0.41f)), 
             };
 
             float timeMin = 0.0001f;
@@ -64,7 +64,10 @@ namespace Renderer
 
                             while(true) {
 
-                                if(bounceLimit == 0) tempColour = new Vector3(0.0f);
+                                if(bounceLimit == 0) {
+                                    tempColour = new Vector3(0.0f);
+                                    break;
+                                }
 
                                 Sphere closestSphere = new Sphere();
                                 float closestTime = timeMax;
