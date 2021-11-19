@@ -15,11 +15,11 @@ namespace AplClient
 
         public int NumberOfSamples { get; set; }
 
-        private Renderer.Renderer renderer;
+        private global::Renderer.Renderer renderer;
 
         public void StartRendering() 
         {
-            renderer = new Renderer.Renderer(bitmap.Width, bitmap.Height);
+            renderer = new global::Renderer.Renderer(bitmap.Width, bitmap.Height);
 
             renderer.renderImage(NumberOfSamples, bitmap);
         }
