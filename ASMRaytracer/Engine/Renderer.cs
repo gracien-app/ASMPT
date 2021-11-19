@@ -36,8 +36,8 @@ namespace Renderer
         public void renderImage(int sampleCount, Bitmap bmp) {
 
             objects = new Sphere[] {
-                new Sphere(new Vector3(0.0f, 0.0f, -0.6f), 0.05f, new Vector3(1.0f, 0.0f, 0.0f)),
-                new Sphere(new Vector3(0.0f, 0.0f, -1.0f), 0.3f, new Vector3(0.0f, 1.0f, 0.0f)), 
+                // new Sphere(new Vector3(0.0f, 0.0f, -0.6f), 0.05f, new Vector3(1.0f, 0.0f, 0.0f)),
+                new Sphere(new Vector3(0.0f, 0.5f, -1.0f), 0.3f, new Vector3(0.0f, 1.0f, 0.0f)), 
             };
 
             float timeMin = 0.0001f;
@@ -52,16 +52,15 @@ namespace Renderer
 
                     Vector3 totalColour = new Vector3(0.0f);
 
+                    float pixelW = x / (float)(imageWidth-1);
+                    float pixelH = y / (float)(imageHeight-1);
+
                     for (int i = 0; i < sampleLimit; i++) {
                         
-                        float pixelW = x / (float)(imageWidth-1);
-                        float pixelH = y / (float)(imageHeight-1);
-
                         var pixelRay = camera.makeRay(pixelW, pixelH);
-
                         var tempColour = new Vector3(1.0f);
 
-                        while (bounceLimit > 0) {
+                        // while (bounceLimit > 0) {
 
                             Sphere closestSphere = new Sphere();
                             float closestTime = timeMax;
@@ -76,12 +75,12 @@ namespace Renderer
                                 tempColour *= closestSphere.colour;
                             } else {
                                 tempColour *= skyColour;
-                                break; 
+                                // break; 
                             }
 
                             pixelRay = bounceRay(closestTime, closestSphere.radius, pixelRay, closestSphere.center);
                             bounceLimit--;
-                        }
+                        // }
 
                         totalColour += tempColour;
                     }
