@@ -42,7 +42,6 @@ namespace Renderer
 
             float timeMin = 0.0001f;
             float timeMax = 100000.0f;
-            int bounceLimit = 10;
             int sampleLimit = 10;
 
             Vector3 skyColour = new Vector3(221.0f/255.0f, 251.0f/255.0f, 1.0f);
@@ -56,6 +55,8 @@ namespace Renderer
                     float pixelH = y / (float)(imageHeight-1);
 
                     for (int i = 0; i < sampleLimit; i++) {
+
+                        int bounceLimit = 10;
                         
                         var pixelRay = camera.makeRay(pixelW, pixelH);
                         var tempColour = new Vector3(1.0f);
