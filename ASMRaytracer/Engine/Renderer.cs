@@ -13,7 +13,7 @@ namespace Renderer
             camera = new Camera(width, height);
         }
 
-        public Ray bounceRay(float time, float radius, Ray inRay, Vector3 center) {
+        public Ray bounceRay(float time, float radius, Ray inRay, Vector3 center, float timeMin) {
             
             Vector3 hitPos = inRay.at(time);
             Vector3 hitNormal = (hitPos - center) / radius;
@@ -30,17 +30,17 @@ namespace Renderer
 
             randomDir = Vector3.Dot(randomDir, hitNormal) > 0.0f ? randomDir : -randomDir;
 
-            return new Ray(hitPos, randomDir);
+            return new Ray((hitPos + hitNormal * timeMin), randomDir);
         }
 
         public void renderImage(int sampleCount, Bitmap bmp) {
 
             objects = new Sphere[] {
-                new Sphere(new Vector3(0.0f, 0.3f, -1.0f), 0.3f, new Vector3(0.41f, 0.41f, 0.41f)), 
-                new Sphere(new Vector3(0.0f, -1000.0f, -1.0f), 1000.0f, new Vector3(0.41f, 0.41f, 0.41f)), 
+                new Sphere(new Vector3(0.0f, 0.3f-0.2f, -1.0f), 0.3f, new Vector3(0.41f, 0.41f, 0.41f)), 
+                new Sphere(new Vector3(0.0f, -1000.0f-0.2f, -1.0f), 1000.0f, new Vector3(0.41f, 0.41f, 0.41f)), 
             };
 
-            float timeMin = 0.0001f;
+            float timeMin = 0.001f;
             float timeMax = 100000.0f;
             int sampleLimit = 10;
 
@@ -87,7 +87,7 @@ namespace Renderer
                                     break;
                                 }
 
-                                pixelRay = bounceRay(closestTime, closestSphere.radius, pixelRay, closestSphere.center);
+                                pixelRay = bounceRay(closestTime, closestSphere.radius, pixelRay, closestSphere.center, timeMin);
                             }
 
                         totalColour += tempColour;
