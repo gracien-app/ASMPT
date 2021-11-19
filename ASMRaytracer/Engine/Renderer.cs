@@ -20,9 +20,9 @@ namespace Renderer
 
             Random RNG = new Random();
 
-            float x = (float)RNG.NextDouble();
-            float y = (float)RNG.NextDouble();
-            float z = (float)RNG.NextDouble();
+            float x = (float)((RNG.NextDouble()-0.5f)*2.0f);
+            float y = (float)((RNG.NextDouble()-0.5f)*2.0f);
+            float z = (float)((RNG.NextDouble()-0.5f)*2.0f);
 
             Vector3 randomDir = new Vector3(x, y, z);
 
