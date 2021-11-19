@@ -62,25 +62,29 @@ namespace Renderer
 
                         // while (bounceLimit > 0) {
 
-                            Sphere closestSphere = new Sphere();
-                            float closestTime = timeMax;
+                            while(true) {
 
-                            foreach (Sphere sph in objects) {
-                                if (sph.Intersect(pixelRay, timeMin, ref closestTime)) {
-                                    closestSphere = sph;
-                                }  
+                                if(bounceLimit == 0) tempColour = new Vector3(0.0f);
+
+                                Sphere closestSphere = new Sphere();
+                                float closestTime = timeMax;
+
+                                foreach (Sphere sph in objects) {
+                                    if (sph.Intersect(pixelRay, timeMin, ref closestTime)) {
+                                        closestSphere = sph;
+                                    }  
+                                }
+
+                                if (closestSphere.radius != 0.0f) {
+                                    tempColour *= closestSphere.colour;
+                                    bounceLimit--;
+                                } else {
+                                    tempColour *= skyColour;
+                                    break;
+                                }
+
+                                pixelRay = bounceRay(closestTime, closestSphere.radius, pixelRay, closestSphere.center);
                             }
-
-                            if (closestSphere.radius != 0.0f) {
-                                tempColour *= closestSphere.colour;
-                            } else {
-                                tempColour *= skyColour;
-                                // break; 
-                            }
-
-                            pixelRay = bounceRay(closestTime, closestSphere.radius, pixelRay, closestSphere.center);
-                            bounceLimit--;
-                        // }
 
                         totalColour += tempColour;
                     }
@@ -94,8 +98,6 @@ namespace Renderer
 
                 }
             }
-
-            
          }
 
         private Camera camera;
