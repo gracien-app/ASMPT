@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace AplClient
 {
-    public partial class Renderer : Form
+    public partial class ProgramWindow : Form
     {
-        public Renderer()
+        public ProgramWindow()
         {
 
             InitializeComponent();

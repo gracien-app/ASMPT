@@ -1,7 +1,7 @@
 ﻿
 namespace AplClient
 {
-    partial class Renderer
+    partial class ProgramWindow
     {
         /// <summary>
         ///  Required designer variable.
@@ -389,14 +389,14 @@ namespace AplClient
             this.SamplesTrackBar.Value = 10;
             this.SamplesTrackBar.Scroll += new System.EventHandler(this.SampleTrackbar_Scroll);
             // 
-            // Renderer
+            // ProgramWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1020, 651);
             this.Controls.Add(this.MainSplitContainer);
-            this.Name = "Renderer";
-            this.Text = "Renderer";
+            this.Name = "ProgramWindow";
+            this.Text = "ProgramWindow";
             this.ResizeEnd += new System.EventHandler(this.AsmTable_Resize);
             this.ImageSplitContainer.Panel1.ResumeLayout(false);
             this.ImageSplitContainer.Panel1.PerformLayout();

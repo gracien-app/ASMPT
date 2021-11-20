@@ -1,6 +1,6 @@
 ﻿// using System;
 
-// namespace Renderer
+// namespace ProgramWindow
 // {
 //     class Program
 //     {
