@@ -113,6 +113,9 @@ namespace Renderer
         private int imageWidth;
         private int imageHeight;
         private Sphere[] objects;
+
+
+        
     }
 
 }
