@@ -396,7 +396,7 @@ namespace AplClient
             this.ClientSize = new System.Drawing.Size(1020, 651);
             this.Controls.Add(this.MainSplitContainer);
             this.Name = "ProgramWindow";
-            this.Text = "ProgramWindow";
+            this.Text = "Hybrid renderer";
             this.ResizeEnd += new System.EventHandler(this.AsmTable_Resize);
             this.ImageSplitContainer.Panel1.ResumeLayout(false);
             this.ImageSplitContainer.Panel1.PerformLayout();
