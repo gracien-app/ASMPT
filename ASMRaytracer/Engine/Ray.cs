@@ -2,7 +2,7 @@ using System.Numerics;
 
 namespace Renderer {
 
-    class Ray {
+    public class Ray {
         public Ray() {
             origin = direct = new Vector3(0.0f);
         }
