@@ -11,5 +11,6 @@ namespace AplClient
     {
         public Bitmap bitmap { get; set; }
         public int NumberOfSamples { get; set; }
+        public bool isAssembly { get; set; }
     }
 }

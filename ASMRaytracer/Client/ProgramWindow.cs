@@ -35,13 +35,17 @@ namespace AplClient
             csBitmap = new Bitmap(500, 500);
         }
 
+        public void setText(String text) {
+            this.CsTimeLabel.Text = text;
+        }
+
         private void StartButton_Click(object sender, EventArgs e)
         {
             LockStartButton();
             if (this.AsmCheckbox.Checked)
             {
                 profAsm.StartTimeMeasurment();
-                ButtonIsClicked?.Invoke(this, new RendererArguments { bitmap = asmBitmap, NumberOfSamples = this.SamplesTrackBar.Value });
+                ButtonIsClicked?.Invoke(this, new RendererArguments { bitmap = asmBitmap, NumberOfSamples = this.SamplesTrackBar.Value, isAssembly = true });
                 profAsm.StopTimeMeasurement();
                 AsmImage.Image = (Image)asmBitmap;
                 this.AsmTimeLabel.Text = profAsm.ReturnSeconds();
@@ -50,7 +54,7 @@ namespace AplClient
             {
                 
                 profCs.StartTimeMeasurment();
-                ButtonIsClicked?.Invoke(this, new RendererArguments { bitmap = csBitmap, NumberOfSamples = this.SamplesTrackBar.Value });
+                ButtonIsClicked?.Invoke(this, new RendererArguments { bitmap = csBitmap, NumberOfSamples = this.SamplesTrackBar.Value, isAssembly = false });
                 profCs.StopTimeMeasurement();
 
                 this.CsTimeLabel.Text =  profCs.ReturnSeconds();

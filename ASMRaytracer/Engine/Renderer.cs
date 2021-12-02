@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Numerics;
+using AplClient;
 
 namespace Renderer
 {
@@ -11,6 +12,7 @@ namespace Renderer
             imageWidth = width;
             imageHeight = height;
             camera = new Camera(width, height);
+            proxy = new AsmProxy();
         }
 
         public Ray bounceRay(float time, float radius, Ray inRay, Vector3 center, float timeMin) {
@@ -33,7 +35,9 @@ namespace Renderer
             return new Ray((hitPos + hitNormal * timeMin), randomDir);
         }
 
-        public void renderImage(int sampleCount, Bitmap bmp) {
+        public void renderImage(int sampleCount, Bitmap bmp, bool isAssembly) {
+
+            if (sampleCount <= 0) sampleCount = 1;
 
             objects = new Sphere[] {
                 new Sphere(new Vector3(0.0f, 0.3f-0.2f, -1.0f), 0.3f, new Vector3(0.41f, 0.41f, 0.41f)), 
@@ -42,7 +46,6 @@ namespace Renderer
 
             float timeMin = 0.001f;
             float timeMax = 100000.0f;
-            int sampleLimit = 20;
 
             Vector3 skyColour = new Vector3(221.0f/255.0f, 251.0f/255.0f, 1.0f);
 
@@ -53,7 +56,7 @@ namespace Renderer
 
                     Vector3 totalColour = new Vector3(0.0f);
 
-                    for (int i = 0; i < sampleLimit; i++) {
+                    for (int i = 0; i < sampleCount; i++) {
 
                         float offsetX = (float)((RNG.NextDouble()-0.5f)*2.0f);
                         float offsetY = (float)((RNG.NextDouble()-0.5f)*2.0f);
@@ -79,7 +82,14 @@ namespace Renderer
                                 float closestTime = timeMax;
 
                                 foreach (Sphere sph in objects) {
-                                    if (sph.Intersect(pixelRay, timeMin, ref closestTime)) {
+
+                                    if (isAssembly) {
+                                        if (proxy.executeAsmIntersect(pixelRay, timeMin, ref closestTime, sph.center, sph.radius)) {
+                                            closestSphere = sph;
+                                        }
+                                    }
+
+                                    else if (sph.Intersect(pixelRay, timeMin, ref closestTime)) {
                                         closestSphere = sph;
                                     }  
                                 }
@@ -98,7 +108,7 @@ namespace Renderer
                         totalColour += tempColour;
                     }
 
-                    totalColour /= sampleLimit;
+                    totalColour /= sampleCount;
 
                     Color outColor = Color.FromArgb((int)(totalColour.X * 255.0f),
                                                     (int)(totalColour.Y * 255.0f),
@@ -113,8 +123,7 @@ namespace Renderer
         private int imageWidth;
         private int imageHeight;
         private Sphere[] objects;
-
-
+        private AsmProxy proxy;
         
     }
 

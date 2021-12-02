@@ -35,13 +35,16 @@ namespace AplClient
             window.ButtonIsClicked += Form_ButtonIsClicked;
 
             var asm = new AsmProxy();
-            //asm.executeAsmAddTwoDoubles(2.0,2.0);
+            var value = asm.executeAsmAddTwoDoubles(4.0,2.0);
+
+            window.setText(value.ToString());
+        
             Application.Run(window);
         }
 
         public static void Form_ButtonIsClicked(object sender, AplClient.RendererArguments arg)
         {
-            renderer.renderImage(arg.NumberOfSamples, arg.bitmap);
+            renderer.renderImage(arg.NumberOfSamples, arg.bitmap, arg.isAssembly);
         }
     }
 }
