@@ -34,6 +34,8 @@ namespace AplClient
             //After ButtonIsClicked metohds is invoked Form_ButtonIsClicked will be executed.
             window.ButtonIsClicked += Form_ButtonIsClicked;
 
+            var asm = new AsmProxy();
+            //asm.executeAsmAddTwoDoubles(2.0,2.0);
             Application.Run(window);
         }
 
