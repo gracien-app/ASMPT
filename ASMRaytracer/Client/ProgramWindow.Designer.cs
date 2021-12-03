@@ -117,7 +117,7 @@ namespace AplClient
             this.AsmImage.Location = new System.Drawing.Point(3, 3);
             this.AsmImage.Name = "AsmImage";
             this.AsmImage.Size = new System.Drawing.Size(504, 500);
-            this.AsmImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.AsmImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.AsmImage.TabIndex = 0;
             this.AsmImage.TabStop = false;
             // 
@@ -212,7 +212,7 @@ namespace AplClient
             this.CSImage.Location = new System.Drawing.Point(3, 3);
             this.CSImage.Name = "CSImage";
             this.CSImage.Size = new System.Drawing.Size(500, 500);
-            this.CSImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.CSImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.CSImage.TabIndex = 1;
             this.CSImage.TabStop = false;
             // 
@@ -381,10 +381,13 @@ namespace AplClient
             // SamplesTrackBar
             // 
             this.SamplesTrackBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SamplesTrackBar.LargeChange = 10;
             this.SamplesTrackBar.Location = new System.Drawing.Point(3, 3);
-            this.SamplesTrackBar.Maximum = 15;
+            this.SamplesTrackBar.Maximum = 100;
+            this.SamplesTrackBar.Minimum = 1;
             this.SamplesTrackBar.Name = "SamplesTrackBar";
             this.SamplesTrackBar.Size = new System.Drawing.Size(539, 48);
+            this.SamplesTrackBar.SmallChange = 5;
             this.SamplesTrackBar.TabIndex = 0;
             this.SamplesTrackBar.Value = 10;
             this.SamplesTrackBar.Scroll += new System.EventHandler(this.SampleTrackbar_Scroll);
