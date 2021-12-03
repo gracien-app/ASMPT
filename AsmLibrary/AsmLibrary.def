@@ -1,7 +1,4 @@
 LIBRARY "Asm"
 EXPORTS
 
-asmAddTwoDoubles
-asmAddTwoDoublesTwo
-
-asmDotProduct
+dotProduct
