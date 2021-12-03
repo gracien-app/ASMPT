@@ -69,41 +69,39 @@ namespace Renderer
                         var pixelRay = camera.makeRay(pixelW, pixelH);
                         var tempColour = new Vector3(1.0f);
 
-                        // while (bounceLimit > 0) {
+                        while(true) {
 
-                            while(true) {
-
-                                if(bounceLimit == 0) {
-                                    tempColour = new Vector3(0.0f);
-                                    break;
-                                }
-
-                                Sphere closestSphere = new Sphere();
-                                float closestTime = timeMax;
-
-                                foreach (Sphere sph in objects) {
-
-                                    if (isAssembly) {
-                                        if (proxy.executeAsmIntersect(pixelRay, timeMin, ref closestTime, sph.center, sph.radius)) {
-                                            closestSphere = sph;
-                                        }
-                                    }
-
-                                    else if (sph.Intersect(pixelRay, timeMin, ref closestTime)) {
-                                        closestSphere = sph;
-                                    }  
-                                }
-
-                                if (closestSphere.radius != 0.0f) {
-                                    tempColour *= closestSphere.colour;
-                                    bounceLimit--;
-                                } else {
-                                    tempColour *= skyColour;
-                                    break;
-                                }
-
-                                pixelRay = bounceRay(closestTime, closestSphere.radius, pixelRay, closestSphere.center, timeMin);
+                            if(bounceLimit == 0) {
+                                tempColour = new Vector3(0.0f);
+                                break;
                             }
+
+                            Sphere closestSphere = new Sphere();
+                            float closestTime = timeMax;
+
+                            foreach (Sphere sph in objects) {
+
+                                if (isAssembly) {
+                                    if (proxy.executeAsmIntersect(pixelRay, timeMin, ref closestTime, sph.center, sph.radius)) {
+                                        closestSphere = sph;
+                                    }
+                                }
+
+                                else if (sph.Intersect(pixelRay, timeMin, ref closestTime)) {
+                                    closestSphere = sph;
+                                }  
+                            }
+
+                            if (closestSphere.radius != 0.0f) {
+                                tempColour *= closestSphere.colour;
+                                bounceLimit--;
+                            } else {
+                                tempColour *= skyColour;
+                                break;
+                            }
+
+                            pixelRay = bounceRay(closestTime, closestSphere.radius, pixelRay, closestSphere.center, timeMin);
+                        }
 
                         totalColour += tempColour;
                     }
