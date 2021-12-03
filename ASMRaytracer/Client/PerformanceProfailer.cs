@@ -17,7 +17,8 @@ namespace AplClient
         {
             TimeSpan t = TimeSpan.FromMilliseconds(stopwatch.ElapsedMilliseconds);
 
-            return string.Format("{0:D0}s:{1:D1}ms",
+            return string.Format("{0:D0}m:{1:D1}s:{2:D2}ms",
+                t.Minutes,
                 t.Seconds,
                 t.Milliseconds);
         }
