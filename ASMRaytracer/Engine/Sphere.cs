@@ -3,7 +3,7 @@ using System;
 using System.Drawing;
 
 namespace Renderer {
-    class Sphere {
+    class Sphere: Geometry {
 
         public Sphere() {
             this.center = new Vector3(0.0f);
@@ -17,7 +17,7 @@ namespace Renderer {
             this.colour = colour;
         }
 
-        public bool Intersect(Ray inRay,float timeMin, ref float timeMax) {
+        public bool IntersectNative(Ray inRay,float timeMin, ref float timeMax) {
             
             Vector3 originC = inRay.origin - this.center;
             float a = inRay.direct.LengthSquared();
@@ -45,8 +45,37 @@ namespace Renderer {
             return true;
         }
 
+        public bool IntersectNoAcceleration(Ray inRay,float timeMin, ref float timeMax) {
+            
+            var originC = Subtract(inRay.origin, this.center);
+            float a = LengthSquared(inRay.direct);
+            float b = DotProduct(inRay.direct, originC);
+            float c = LengthSquared(originC) - (this.radius * this.radius);
+            
+            float delta = b*b - a*c;
+
+            float root = 0.0f;
+            
+            if (delta < 0.0) return false;
+            else {
+                float deltaSqrt = MathF.Sqrt(delta);
+                
+                root = (-b - deltaSqrt) / a;
+                if (root > timeMax || root < timeMin) {
+                    root = (-b + deltaSqrt) / a;
+                    if (root > timeMax || root < timeMin) {
+                        return false;
+                    }
+                }
+            }
+
+            timeMax = root;
+            return true;
+        }
+
         public Vector3 center;
         public Vector3 colour;
         public float radius;
     }
+    
 }
