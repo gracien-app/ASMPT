@@ -87,7 +87,7 @@ namespace Renderer
                                     }
                                 }
 
-                                if (sph.IntersectNoAcceleration(pixelRay, timeMin, ref closestTime)) {
+                                else if (sph.IntersectNoAcceleration(pixelRay, timeMin, ref closestTime)) {
                                     closestSphere = sph;
                                 }  
                             }
