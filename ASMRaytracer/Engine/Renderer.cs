@@ -15,10 +15,10 @@ namespace Renderer
             proxy = new AsmProxy();
         }
 
-        public Ray bounceRay(float time, float radius, Ray inRay, Vector3 center, float timeMin) {
+        public Ray bounceRay(float time, float radius, Ray inRay, Vector4 center, float timeMin) {
             
-            Vector3 hitPos = inRay.at(time);
-            Vector3 hitNormal = (hitPos - center) / radius;
+            Vector4 hitPos = inRay.at(time);
+            Vector4 hitNormal = (hitPos - center) / radius;
 
             Random RNG = new Random();
 
@@ -26,11 +26,11 @@ namespace Renderer
             float y = (float)((RNG.NextDouble()-0.5f)*2.0f);
             float z = (float)((RNG.NextDouble()-0.5f)*2.0f);
 
-            Vector3 randomDir = new Vector3(x, y, z);
+            Vector4 randomDir = new Vector4(x, y, z, 0.0f);
 
-            randomDir = Vector3.Normalize(randomDir);
+            randomDir = Vector4.Normalize(randomDir);
 
-            randomDir = Vector3.Dot(randomDir, hitNormal) > 0.0f ? randomDir : -randomDir;
+            randomDir = Vector4.Dot(randomDir, hitNormal) > 0.0f ? randomDir : -randomDir;
 
             return new Ray((hitPos + hitNormal * timeMin), randomDir);
         }
@@ -40,8 +40,10 @@ namespace Renderer
             if (sampleCount <= 0) sampleCount = 1;
 
             objects = new Sphere[] {
-                new Sphere(new Vector3(0.0f, 0.3f-0.2f, -1.0f), 0.3f, new Vector3(0.41f, 0.41f, 0.41f)), 
-                new Sphere(new Vector3(0.0f, -1000.0f-0.2f, -1.0f), 1000.0f, new Vector3(0.41f, 0.41f, 0.41f)), 
+                new Sphere( new Vector4(0.0f, 0.3f-0.2f, -1.0f, 0.0f), 0.3f, 
+                            new Vector3(0.41f, 0.41f, 0.41f)), 
+                new Sphere( new Vector4(0.0f, -1000.0f-0.2f, -1.0f, 0.0f), 1000.0f, 
+                            new Vector3(0.41f, 0.41f, 0.41f)), 
             };
 
             float timeMin = 0.001f;

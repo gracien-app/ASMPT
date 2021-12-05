@@ -13,7 +13,7 @@ namespace AplClient
         private static extern float asmSphereIntersect(Vector4 first, Vector4 second, 
                                                        Vector4 three, Vector4 radius);
 
-        public bool executeAsmIntersect(Ray inRay, float timeMin, ref float timeMax, Vector3 center, float radius)
+        public bool executeAsmIntersect(Ray inRay, float timeMin, ref float timeMax, Vector4 center, float radius)
         {
             //Vector4 origin = new Vector4(0.0f, 1.0f, 1.0f, 0.0f);
             //Vector4 direction = new Vector4(0.5f, 0.5f, 0.5f, 0.0f);
@@ -27,15 +27,13 @@ namespace AplClient
             //////float b = executeDotProduct(inRay.direct, originC);
             //float c = originC.LengthSquared() - (fradius.X * fradius.X);
 
-            Vector3 originC = inRay.origin - center;
+            Vector4 originC = inRay.origin - center;
             float a = inRay.direct.LengthSquared();
-            float b = Vector3.Dot(inRay.direct, originC);
-            float c = originC.LengthSquared() - (radius * radius);
+            float b = Vector4.Dot(inRay.direct, originC);
+            // float c = originC.LengthSquared() - (radius * radius);
 
-            float delta = asmSphereIntersect(new Vector4(inRay.origin, 0.0f), 
-                                             new Vector4(inRay.direct, 0.0f), 
-                                             new Vector4(center, 0.0f), 
-                                             new Vector4(radius));
+            float delta = asmSphereIntersect(inRay.origin, inRay.direct, 
+                                             center, new Vector4(radius));
 
             //float delta = asmSphereIntersect(origin, direction, fcenter, fradius);
 

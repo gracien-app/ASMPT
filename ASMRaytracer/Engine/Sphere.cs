@@ -6,12 +6,12 @@ namespace Renderer {
     class Sphere: Geometry {
 
         public Sphere() {
-            this.center = new Vector3(0.0f);
+            this.center = new Vector4(0.0f);
             this.radius = 0.0f;
             this.colour = new Vector3(0.0f);
         }
 
-        public Sphere(Vector3 center, float radius, Vector3 colour) {
+        public Sphere(Vector4 center, float radius, Vector3 colour) {
             this.center = center;
             this.radius = radius;
             this.colour = colour;
@@ -19,12 +19,12 @@ namespace Renderer {
 
         public bool IntersectNative(Ray inRay,float timeMin, ref float timeMax) {
             
-            Vector3 originC = inRay.origin - this.center;
+            Vector4 originC = inRay.origin - this.center;
             float a = inRay.direct.LengthSquared();
-            float b = Vector3.Dot(inRay.direct, originC);
+            float b = 2.0f*Vector4.Dot(inRay.direct, originC);
             float c = (originC).LengthSquared()-(this.radius*this.radius);
             
-            float delta = b*b - a*c;
+            float delta = b*b - 4*a*c;
 
             float root = 0.0f;
             
@@ -32,9 +32,9 @@ namespace Renderer {
             else {
                 float deltaSqrt = MathF.Sqrt(delta);
                 
-                root = (-b - deltaSqrt) / a;
+                root = (-b - deltaSqrt) / (2.0f*a);
                 if (root > timeMax || root < timeMin) {
-                    root = (-b + deltaSqrt) / a;
+                    root = (-b + deltaSqrt) / (2.0f*a);
                     if (root > timeMax || root < timeMin) {
                         return false;
                     }
@@ -49,10 +49,10 @@ namespace Renderer {
             
             var originC = Subtract(inRay.origin, this.center);
             float a = LengthSquared(inRay.direct);
-            float b = DotProduct(inRay.direct, originC);
+            float b = 2.0f*DotProduct(inRay.direct, originC);
             float c = LengthSquared(originC) - (this.radius * this.radius);
             
-            float delta = b*b - a*c;
+            float delta = b*b - 4*a*c;
 
             float root = 0.0f;
             
@@ -60,9 +60,9 @@ namespace Renderer {
             else {
                 float deltaSqrt = MathF.Sqrt(delta);
                 
-                root = (-b - deltaSqrt) / a;
+                root = (-b - deltaSqrt) / (2.0f*a);
                 if (root > timeMax || root < timeMin) {
-                    root = (-b + deltaSqrt) / a;
+                    root = (-b + deltaSqrt) / (2.0f*a);
                     if (root > timeMax || root < timeMin) {
                         return false;
                     }
@@ -73,7 +73,7 @@ namespace Renderer {
             return true;
         }
 
-        public Vector3 center;
+        public Vector4 center;
         public Vector3 colour;
         public float radius;
     }

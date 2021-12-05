@@ -1,5 +1,4 @@
 LIBRARY "Asm"
 EXPORTS
 
-dotProduct
 asmSphereIntersect
