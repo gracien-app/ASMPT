@@ -32,18 +32,19 @@ namespace AplClient
             float b = Vector4.Dot(inRay.direct, originC);
             // float c = originC.LengthSquared() - (radius * radius);
 
-            float delta = asmSphereIntersect(inRay.origin, inRay.direct, 
+            float root = asmSphereIntersect(inRay.origin, inRay.direct, 
                                              center, new Vector4(radius));
 
             //float delta = asmSphereIntersect(origin, direction, fcenter, fradius);
 
             //float delta = (b * b) - (4 * a * c);
+            /*
             float root = 0.0f;
 
             if (delta < 0.0) return false;
             else
             {
-                float deltaSqrt = MathF.Sqrt(delta);
+                float deltaSqrt = delta;
 
                 root = (-b - deltaSqrt) / a;
                 if (root > timeMax || root < timeMin)
@@ -59,6 +60,17 @@ namespace AplClient
             timeMax = root;
 
             return true;
+            */
+
+            if(root >= 0)
+            {
+                timeMax = root;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
