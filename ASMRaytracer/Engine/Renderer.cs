@@ -37,19 +37,23 @@ namespace Renderer
 
         public void renderImage(int sampleCount, Bitmap bmp, bool isAssembly) {
 
-            if (sampleCount <= 0) sampleCount = 1;
+            float Zedit = 0.4f;
 
             objects = new Sphere[] {
-                new Sphere( new Vector4(0.0f, 0.3f-0.2f, -1.0f, 0.0f), 0.3f, 
-                            new Vector3(0.41f, 0.41f, 0.41f)), 
+                new Sphere( new Vector4(0.0f, 0.15f-0.2f, -1.0f+Zedit, 0.0f), 0.15f, 
+                            new Vector3(1.00f, 0.549f, 0.0f)),
+                new Sphere( new Vector4(0.6f, 0.3f-0.2f, -1.5f+Zedit, 0.0f), 0.3f,
+                            new Vector3(1.0f, 0.0f, 0.333f)),
+                new Sphere( new Vector4(-0.6f, 0.3f-0.2f, -1.5f+Zedit, 0.0f), 0.3f,
+                            new Vector3(0.251f, 0.878f, 0.816f)),
                 new Sphere( new Vector4(0.0f, -1000.0f-0.2f, -1.0f, 0.0f), 1000.0f, 
-                            new Vector3(0.41f, 0.41f, 0.41f)), 
+                            new Vector3(0.455f, 0.463f, 0.471f)), 
             };
 
             float timeMin = 0.001f;
             float timeMax = 100000.0f;
 
-            Vector3 skyColour = new Vector3(221.0f/255.0f, 251.0f/255.0f, 1.0f);
+            Vector3 skyColour = new Vector3(245.0f/255.0f, 245.0f/255.0f, 245.0f/255.0f);
 
             Random RNG = new Random();
             
@@ -114,7 +118,7 @@ namespace Renderer
                                                     (int)(totalColour.Y * 255.0f),
                                                     (int)(totalColour.Z * 255.0f));
                     bmp.SetPixel(x, y, outColor);
-
+                    
                 }
             }
          }

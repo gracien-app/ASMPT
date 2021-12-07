@@ -42,23 +42,23 @@ namespace AplClient
         private void StartButton_Click(object sender, EventArgs e)
         {
             LockStartButton();
-            if (this.AsmCheckbox.Checked)
-            {
-                profAsm.StartTimeMeasurment();
-                ButtonIsClicked?.Invoke(this, new RendererArguments { bitmap = asmBitmap, NumberOfSamples = this.SamplesTrackBar.Value, isAssembly = true });
-                profAsm.StopTimeMeasurement();
-                AsmImage.Image = (Image)asmBitmap;
-                this.AsmTimeLabel.Text = profAsm.ReturnSeconds();
-            }
             if(this.CsCheckbox.Checked)
             {
                 
                 profCs.StartTimeMeasurment();
                 ButtonIsClicked?.Invoke(this, new RendererArguments { bitmap = csBitmap, NumberOfSamples = this.SamplesTrackBar.Value, isAssembly = false });
                 profCs.StopTimeMeasurement();
-
                 this.CsTimeLabel.Text =  profCs.ReturnSeconds();
                 CSImage.Image = (Image)csBitmap;
+            }
+            this.Update();
+            if (this.AsmCheckbox.Checked)
+            {
+                profAsm.StartTimeMeasurment();
+                ButtonIsClicked?.Invoke(this, new RendererArguments { bitmap = asmBitmap, NumberOfSamples = this.SamplesTrackBar.Value, isAssembly = true });
+                profAsm.StopTimeMeasurement();
+                this.AsmTimeLabel.Text = profAsm.ReturnSeconds();
+                AsmImage.Image = (Image)asmBitmap;
             }
             UnlockStartButton();
         }
