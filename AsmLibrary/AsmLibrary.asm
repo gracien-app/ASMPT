@@ -1,3 +1,22 @@
+;Topic: ASM Raytracer 
+;Brief:	The project is a demo of a raytracer which allows the user
+;		to compare performance between different implementations.
+;		Bulk of the project is written in C#. One method
+;		is available in two forms: C# and ASM implementation.
+;		The user can choose	which one should be used for rendering.
+;		This dual method is a fundamental method of any pathtracer:
+;		it allows for detection and finding of an intersection
+;		beetween a camera ray and an object in the scene.
+;		The rays can then bounce and gather color data for a pixel of the
+;		rendered image.
+;
+;	09.12.2021
+;	Semester V
+;	Jakub Leœniak, Gracjan Je¿ewski, Rados³aw Rzeczkowski
+;
+;	Version: 1.9
+
+
 .data
 
 align 16
@@ -91,6 +110,7 @@ asmSphereIntersect PROC
 	mulps 	xmm1, xmm2
 	vsubps 	xmm0, xmm0, xmm1
 	;
+	; The following asm code corresponds to this c#. It calculates the closest intersection point
 	;if (delta < 0.0) return false;
     ;        else
     ;        {
@@ -107,118 +127,116 @@ asmSphereIntersect PROC
     ;            }
     ;        }
 	;
-	;	storage = what it was -> what it becomes
-	;	xmm0 = delta -> deltaSqrt
-	;	xmm1 -> root
+	;	storage	=	what it held  ->  what it will hold
+	;	xmm0	=	delta	->	deltaSqrt
+	;	xmm1	->  root
 	;	xmm6, xmm7 = utility registers
 	;	[_adelta] = a
-	;	[_bdelta] = b -> -b
-	;	[_cdelta] = c -> utility memory
+	;	[_bdelta] = b	->	-b
+	;	[_cdelta] = c	->	utility memory
 	;	[_time_max] = TimeMax
 	;	[_time_min] = TimeMin
-	;	[_minus_one] = you guessed it, -1
-
-	;---Debug code in .data: setup _time_max and _time_min ---
-
+	;	[_minus_one] = -1.0
+	;
 	;-------Check if delta < 0-------
-	  ;Get a copy of delta for comparison, prepare xmm6 with zero
+	; Get a copy of delta for comparison, prepare xmm6 with zero
 	movss	xmm7, xmm0
 	xorps	xmm6, xmm6
-	  ;If xmm7 is less than xmm6 (0) then there will be ones in xmm7 (highest dword filled with 1s)
+	; If xmm7 (delta) is less than xmm6 (0) then there will be ones in xmm7
 	cmpltps	xmm7, xmm6
-	  ;Move to memory the result of comparison (all 0s or all 1s), _cdelta overwritten
+	; Move to memory the result of comparison (all 0s or all 1s), _cdelta gets overwritten
 	movss	[_cdelta], xmm7
-	  ;Prepare for test of contents
+	; Prepare for test of contents
 	mov		eax, [_cdelta]
-	  ;Test contents (if all 0s, jump will happen, else not)
+	; Test contents (if all 0s, jump will happen, else not)
 	test	eax, eax
-	JZ		LARGER
-
-	  ;Return -1
+	JZ		NotLess
+	
+	; Return -1
 	movss	xmm0, dword ptr [_minus_one]
 	ret
-
+	
 	;-------Calculate first root-------
-	LARGER:
-	  ;Negate _bdelta
+	NotLess:
+	; Negate _bdelta
 	movss	xmm7, dword ptr [_bdelta]
 	subss	xmm6, xmm7
 	movss	dword ptr [_bdelta], xmm6 
 
-	  ;Sqare root of delta
+	; Sqare root of delta
 	sqrtss	xmm0, xmm0
 
-	  ; xmm6 = -b - deltaSqrt (b still in xmm6)
+	; xmm6 = -b - deltaSqrt (b still in xmm6)
 	subss	xmm6, xmm0
-	  ; xmm6 /= a
+	; xmm6 /= a
 	divss	xmm6, dword ptr [_adelta]
 	movss	xmm1, xmm6
 
 	;-------Check if root > timeMax || root < timeMin-------
-	  ;Root is still in xmm6
-	  ;Prepare xmm7 with timeMax
+	; Root is still in xmm6
+	; Prepare xmm7 with timeMax
 	movss	xmm7, dword ptr [_time_max]
-	  ;If xmm7 < xmm6 (root) then there will be ones in xmm7 (highest dword filled with 1s)
+	; If xmm7 (_time_max) < xmm6 (root) then there will be ones in xmm7
 	cmpltss xmm7, xmm6
-	  ;Move to memory the result of comparison (all 0s or all 1s), _cdelta overwritten
+	; Move to memory the result of comparison (all 0s or all 1s), _cdelta gets overwritten
 	movss	[_cdelta], xmm7
-	  ;Store in eax
+	;  Store in eax
 	mov		eax, [_cdelta]
 
-	  ;Prepare xmm7 with root and xmm6 with _time_min
+	; Prepare xmm7 with root and xmm6 with _time_min
 	movss	xmm7, xmm1
 	movss	xmm6, dword ptr [_time_min]
-	  ;If xmm7 < xmm6 (_time_min) then there will be ones in xmm7 (highest dword filled with 1s)
+	; If xmm7 (root) < xmm6 (_time_min) then there will be ones in xmm7
 	cmpltss xmm7, xmm6
-	  ;Move to memory the result of comparison (all 0s or all 1s), _cdelta overwritten
+	; Move to memory the result of comparison (all 0s or all 1s), _cdelta gets overwritten
 	movss	[_cdelta], xmm7
-	  ;OR with eax
+	; OR ||
 	or		eax, [_cdelta]
-	  ;Test contents (if all 0s, jump will happen, else not)
+	; Test contents (if all 0s, jump will happen, else not)
 	test	eax, eax
 	JZ RootFound
 
 	;-------Calculate other root-------
-	  ;If didn't jump, look for other root
+	; If didn't jump, look for other root
 	movss	xmm6, dword ptr [_bdelta]
-	  ; xmm6 = -b + deltaSqrt
+	; xmm6 = -b + deltaSqrt
 	addss	xmm6, xmm0
-	  ; xmm6 /= a
+	; xmm6 /= a
 	divss	xmm6, dword ptr [_adelta]
 	movss	xmm1, xmm6
 
 	;-------Check if root > timeMax || root < timeMin-------
-	  ;Root is still in xmm6
-	  ;Prepare xmm7 with timeMax
+	; Root is still in xmm6
+	; Prepare xmm7 with timeMax
 	movss	xmm7, dword ptr [_time_max]
-	  ;If xmm7 < xmm6 (root) then there will be ones in xmm7 (highest dword filled with 1s)
+	; If xmm7 (_time_max) < xmm6 (root) then there will be ones in xmm7
 	cmpltps xmm7, xmm6
-	  ;Move to memory the result of comparison (all 0s or all 1s), _cdelta overwritten
+	; Move to memory the result of comparison (all 0s or all 1s), _cdelta gets overwritten
 	movss	[_cdelta], xmm7
-	  ;Store in eax
+	; Store in eax
 	mov		eax, [_cdelta]
 
-	  ;Prepare xmm7 with root and xmm6 with _time_min
+	; Prepare xmm7 with root and xmm6 with _time_min
 	movss	xmm7, xmm1
 	movss	xmm6, dword ptr [_time_min]
-	  ;If xmm7 < xmm6 (_time_min) then there will be ones in xmm7 (highest dword filled with 1s)
+	; If xmm7 (root) < xmm6 (_time_min) then there will be ones in xmm7
 	cmpltps xmm7, xmm6
-	  ;Move to memory the result of comparison (all 0s or all 1s), _cdelta overwritten
+	; Move to memory the result of comparison (all 0s or all 1s), _cdelta gets overwritten
 	movss	[_cdelta], xmm7
-	  ;OR with eax
+	; OR with eax
 	or		eax, [_cdelta]
-	  ;Test contents (if all 0s, jump will happen, else not)
+	; Test contents (if all 0s, jump will happen, else not)
 	test	eax, eax
 	JZ RootFound
 
-	  ;No roots found
-	  ;return -1
+	; No roots found
+	; return -1
 	movss	xmm0, dword ptr [_minus_one]
 	ret
 
 	RootFound:
-	  ;Return root
-	  ;Root will always be at xmm1, so move that to xmm0
+	; Return root
+	; Root will always be at xmm1, so move that to xmm0
 	movss	xmm0, xmm1;
 	ret
 asmSphereIntersect ENDP
