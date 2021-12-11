@@ -6,6 +6,8 @@ using Renderer;
 
 namespace AplClient
 {
+    //Proxy class used to import procedures writen in assembler.
+    //Must be initialized before using.
     public unsafe class AsmProxy
     {
 
