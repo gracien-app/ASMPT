@@ -6,13 +6,13 @@
 ;		The user can choose	which one should be used for rendering.
 ;		This dual method is a fundamental method of any pathtracer:
 ;		it allows for detection and finding of an intersection
-;		beetween a camera ray and an object in the scene.
+;		beetween a ray and an object in the scene.
 ;		The rays can then bounce and gather color data for a pixel of the
 ;		rendered image.
 ;
 ;	09.12.2021
 ;	Semester V
-;	Jakub Leúniak, Gracjan Jeøewski, Rados≥aw Rzeczkowski
+;	Jakub Le≈õniak, Gracjan Je≈ºewski, Rados≈Çaw Rzeczkowski
 ;
 ;	Version: 1.9
 
@@ -82,8 +82,6 @@ asmSphereIntersect PROC
 	movss 	[_adelta], xmm0
 	;
 	; float b = Vector3.Dot(inRay.direct, originC)
-	; mov r8, offset _arg_one
-	; push r8
 	movapd 	xmm0, qword ptr [_arg_one]
 	movapd 	xmm1, qword ptr [_arg_two]
 	movapd 	[_input_one], xmm0
@@ -102,7 +100,6 @@ asmSphereIntersect PROC
 	movss 	[_cdelta], xmm0
 	; 
 	; float delta= reduced_b*reduced_b - a*c 
-	;
 	movss 	xmm0, dword ptr [_bdelta]
 	mulps 	xmm0, xmm0
 	movss 	xmm1, dword ptr [_adelta]

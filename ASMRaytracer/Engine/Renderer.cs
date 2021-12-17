@@ -15,6 +15,9 @@ namespace Renderer
             proxy = new AsmProxy();
         }
 
+        // Perform ray bounce, new ray is created from random values generated for each component.
+        // Bounced ray origin is a hit position from which we are bouncing our ray.
+        // If bounce direction is generated on wrong hemisphere (inside geometry) we negate it.
         public Ray bounceRay(float time, float radius, Ray inRay, Vector4 center, float timeMin) {
             
             Vector4 hitPos = inRay.at(time);
@@ -35,10 +38,11 @@ namespace Renderer
             return new Ray((hitPos + hitNormal * timeMin), randomDir);
         }
 
+        // Method performing rendering of an image for N-samples.
         public void renderImage(int sampleCount, Bitmap bmp, bool isAssembly) {
 
             float Zedit = 0.4f;
-
+            // Scene array containing procedural scene geometry.
             objects = new Sphere[] {
                 new Sphere( new Vector4(0.0f, 0.15f-0.2f, -1.0f+Zedit, 0.0f), 0.15f, 
                             new Vector3(1.00f, 0.549f, 0.0f)),
@@ -57,16 +61,23 @@ namespace Renderer
 
             Random RNG = new Random();
             
+            // Iterate through every pixel in the image
             for (int y = 0; y < imageHeight; y++) {
                 for (int x = 0; x < imageWidth; x++) {
 
+                    // Total colour accumulated for this pixel
                     Vector3 totalColour = new Vector3(0.0f);
 
+                    // Performing actions for N-samples.
                     for (int i = 0; i < sampleCount; i++) {
 
+                        // Offsets with random values to perform primitive antialiasing.
+                        // We are randomly sampling neighbouring pixels in 3x3 grid. To smoothen the edges.
                         float offsetX = (float)((RNG.NextDouble()-0.5f)*2.0f);
                         float offsetY = (float)((RNG.NextDouble()-0.5f)*2.0f);
 
+                        // Calculate pixel width and height ratio [0, 1].
+                        // To find exact position we are using this data to offset camera starting position.
                         float pixelW = (x + offsetX) / (float)(imageWidth-1);
                         float pixelH = (y + offsetY) / (float)(imageHeight-1);
                         
@@ -75,6 +86,9 @@ namespace Renderer
                         var pixelRay = camera.makeRay(pixelW, pixelH);
                         var tempColour = new Vector3(1.0f);
 
+                        // Bounce ray unitil:
+                        // 1) Limit is exceeded
+                        // 2) Sky (no intersection) is reached
                         while(true) {
 
                             if(bounceLimit == 0) {
@@ -85,6 +99,7 @@ namespace Renderer
                             Sphere closestSphere = new Sphere();
                             float closestTime = timeMax;
 
+                            // Iterate through all objects, find smallest intersection
                             foreach (Sphere sph in objects) {
 
                                 if (isAssembly) {
@@ -98,6 +113,7 @@ namespace Renderer
                                 }  
                             }
 
+                            // If any intersection was found, default sphere with 0 radius is overwritten.
                             if (closestSphere.radius != 0.0f) {
                                 tempColour *= closestSphere.colour;
                                 bounceLimit--;
@@ -106,12 +122,15 @@ namespace Renderer
                                 break;
                             }
 
+                            // Calculate bounced ray, set as our pixel ray for next iteration.
                             pixelRay = bounceRay(closestTime, closestSphere.radius, pixelRay, closestSphere.center, timeMin);
                         }
 
+                        // Accumulate colour
                         totalColour += tempColour;
                     }
 
+                    // Average colour
                     totalColour /= sampleCount;
 
                     Color outColor = Color.FromArgb((int)(totalColour.X * 255.0f),

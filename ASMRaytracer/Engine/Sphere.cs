@@ -17,6 +17,7 @@ namespace Renderer {
             this.colour = colour;
         }
 
+        // Method used to determine intersection, using native C# vector methods.
         public bool IntersectNative(Ray inRay,float timeMin, ref float timeMax) {
             
             Vector4 originC = inRay.origin - this.center;
@@ -45,6 +46,7 @@ namespace Renderer {
             return true;
         }
 
+        // Method used to determine intersection, using handmade vector operation functions.
         public bool IntersectNoAcceleration(Ray inRay,float timeMin, ref float timeMax) {
             
             var originC = Subtract(inRay.origin, this.center);
