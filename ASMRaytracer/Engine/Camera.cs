@@ -21,6 +21,7 @@ namespace Renderer {
 
         } 
 
+        // Method used to create ray from camera using internal camera specifications with given offsets.
         public Ray makeRay(float xOffset, float yOffset) {
             var offsetDir = renderStartPos + (xDir * xOffset) - (yDir * yOffset);
             return new Ray(position, offsetDir - position);

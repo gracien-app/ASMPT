@@ -12,6 +12,7 @@ namespace Renderer {
             direct = dirPos;
         }
 
+        // Calculate position of ray for time.
         public Vector4 at(float time) {
             return origin + (direct * time);
         }
