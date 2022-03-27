@@ -1,4 +1,0 @@
-LIBRARY "Asm"
-EXPORTS
-
-asmSphereIntersect

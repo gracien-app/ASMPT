@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "AplClient": {
-      "commandName": "Project",
-      "workingDirectory": "C:\\source\\repos\\ASMRaytracer\\DLLs\\x64\\Debug\\",
-      "nativeDebugging": true
-    }
-  }
-}
